@@ -179,8 +179,10 @@ if(videoNumber < 1 || videoNumber > videos.length) {
 }
 const currentVideo = videos[videoNumber - 1];
 // ভিডিও চালানো
-document.getElementById("videoTitle").innerText =
-currentVideo.title;
+<img
+src="${video.poster || 'images/IMG_6694.jpeg'}"
+alt="${video.title}"
+loading="lazy">
 document.getElementById("videoInfo").innerText =
 "👤 Admin | " + currentVideo.views + " views";
 const player = document.getElementById("mainVideo");
