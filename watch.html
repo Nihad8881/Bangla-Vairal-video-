@@ -3,19 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Watch Video</title>
 
 <style>
-* {
-    box-sizing: border-box;
-}
-
 body {
     margin: 0;
     background: #f5f5f5;
     font-family: Arial, sans-serif;
-    color: #222;
 }
 
 header {
@@ -26,259 +20,37 @@ header {
     font-weight: bold;
 }
 
-.container {
-    max-width: 1100px;
-    margin: auto;
-    padding: 12px;
-}
-
 .player {
     width: 100%;
-    background: #000;
-    border-radius: 8px;
-    overflow: hidden;
+    background: black;
+    margin-top: 15px;
 }
 
-.player video {
+video {
     width: 100%;
     display: block;
     aspect-ratio: 16/9;
 }
 
 h2 {
-    font-size: 21px;
-}
-
-.info {
-    color: #777;
-    margin: 12px 0;
-}
-
-.actions {
-    display: flex;
-    justify-content: space-around;
-    background: white;
-    padding: 15px 5px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-}
-
-.actions button {
-    border: none;
-    background: none;
-    font-size: 14px;
-}
-
-.description {
-    background: white;
-    padding: 15px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-}
-
-.recommend-title {
-    font-size: 20px;
-    font-weight: bold;
-    margin: 20px 0;
-}
-
-.grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 12px;
-}
-
-.card {
-    cursor: pointer;
-    min-width: 0;
-}
-
-.card img {
-    width: 100%;
-    aspect-ratio: 16/9;
-    object-fit: cover;
-    border-radius: 7px;
-    background: #ddd;
-}
-
-.card h3 {
-    font-size: 15px;
-    margin: 7px 0;
-}
-
-.card p {
-    color: #777;
-    font-size: 12px;
-    margin-top: 5px;
-}
-
-footer {
-    background: #171717;
-    color: white;
-    padding: 22px;
-    text-align: center;
-    margin-top: 30px;
-}
-
-@media(min-width:700px) {
-    .grid {
-        grid-template-columns: repeat(3,1fr);
-    }
-}
-
-@media(min-width:1000px) {
-    .grid {
-        grid-template-columns: repeat(4,1fr);
-    }
+    padding: 12px;
 }
 </style>
 </head>
 
 <body>
 
-<header>
-    MY VIDEO WEBSITE
-</header>
+<header>My Video Website</header>
 
-<div class="container">
+<h2 id="title">Video Title 2</h2>
 
-    <div class="player" id="player">
-    </div>
-
-    <h2 id="videoTitle">Video Title 1</h2>
-
-    <div class="info">
-        👤 Admin | <span id="views">12.5K</span> views
-    </div>
-
-    <div class="actions">
-        <button onclick="alert('Thanks!')">👍 Like</button>
-        <button onclick="shareVideo()">↗ Share</button>
-        <button onclick="location.href='index.html'">⌂ Home</button>
-    </div>
-
-    <div class="description">
-        <h3>About Video</h3>
-        <p id="description">
-            Watch the video here.
-        </p>
-    </div>
-
-    <div class="recommend-title">
-        Recommended Videos
-    </div>
-
-    <div class="grid" id="recommended"></div>
-
+<div class="player">
+<video controls playsinline preload="metadata">
+    <source
+    src="-2428178015761973789.mp4"
+    type="video/mp4">
+</video>
 </div>
-
-<footer>
-    MY VIDEO WEBSITE © 2026
-</footer>
-
-<script>
-
-// Video information
-
-const videos = [
-
-{
-title:"Video Title 1",
-views:"12.5K",
-url:"https://cdn.hyperserve.io/27503482-3ae8-4524-8fe2-2244752e9e28/7dd6e33b-867d-476c-a3d0-d1bb2ef7a332/1080p.mp4",
-poster:"https://cdn.hyperserve.io/27503482-3ae8-4524-8fe2-2244752e9e28/7dd6e33b-867d-476c-a3d0-d1bb2ef7a332/preview.jpg"
-},
-
-];
-
-for(let i=2;i<=20;i++){
-    videos.push({
-        title:"Video Title "+i,
-        views:"0",
-        url:"",
-        poster:"images/IMG_6694.jpeg"
-    });
-}
-
-// Get selected video
-
-const params = new URLSearchParams(location.search);
-
-let id = Number(params.get("id")) || 1;
-
-if(id < 1 || id > videos.length) id = 1;
-
-const video = videos[id-1];
-
-document.getElementById("videoTitle").textContent =
-video.title;
-
-document.getElementById("views").textContent =
-video.views;
-
-// Video player
-
-if(video.url){
-
-    document.getElementById("player").innerHTML = `
-    <video controls playsinline poster="${video.poster}">
-        <source src="${video.url}" type="video/mp4">
-    </video>
-    `;
-
-}else{
-
-    document.getElementById("player").innerHTML = `
-    <div style="color:white;text-align:center;padding:80px 10px">
-        Video link not added yet.
-    </div>
-    `;
-
-}
-
-// Recommended videos
-
-const recommended = document.getElementById("recommended");
-
-videos.forEach((v,index)=>{
-
-    if(index+1 === id) return;
-
-    const card = document.createElement("div");
-
-    card.className = "card";
-
-    card.innerHTML = `
-        <img src="${v.poster}" loading="lazy">
-        <h3>${v.title}</h3>
-        <p>👤 Admin | ${v.views} views</p>
-    `;
-
-    card.onclick = ()=>{
-        location.href = "watch.html?id="+(index+1);
-    };
-
-    recommended.appendChild(card);
-
-});
-
-// Share
-
-function shareVideo(){
-
-    if(navigator.share){
-        navigator.share({
-            title:video.title,
-            url:location.href
-        });
-    }else{
-        navigator.clipboard.writeText(location.href);
-        alert("Link copied!");
-    }
-
-}
-
-</script>
 
 </body>
 </html>
