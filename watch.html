@@ -4,14 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Watch Video</title>
-
 <style>
+* {
+    box-sizing: border-box;
+}
 body {
     margin: 0;
     background: #f5f5f5;
     font-family: Arial, sans-serif;
+    color: #222;
 }
-
 header {
     background: #171717;
     color: white;
@@ -19,38 +21,199 @@ header {
     font-size: 23px;
     font-weight: bold;
 }
-
+.logo {
+    color: #ff4055;
+}
+.container {
+    max-width: 1000px;
+    margin: auto;
+    padding: 12px;
+}
 .player {
     width: 100%;
     background: black;
-    margin-top: 15px;
+    border-radius: 8px;
+    overflow: hidden;
 }
-
 video {
     width: 100%;
     display: block;
     aspect-ratio: 16/9;
+    background: black;
 }
-
-h2 {
-    padding: 12px;
+.video-details {
+    background: white;
+    padding: 15px;
+    margin-bottom: 15px;
+}
+.video-details h2 {
+    margin: 0 0 10px;
+    font-size: 21px;
+}
+.info {
+    color: #777;
+    font-size: 14px;
+}
+.section-title {
+    font-size: 20px;
+    margin: 22px 0 15px;
+}
+.video-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 15px 12px;
+}
+.video-card {
+    cursor: pointer;
+    min-width: 0;
+}
+.thumbnail {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16/9;
+    background: #ddd;
+    border-radius: 7px;
+    overflow: hidden;
+}
+.thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.play-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0,0,0,.65);
+    color: white;
+    padding: 12px 17px;
+    border-radius: 50%;
+    font-size: 22px;
+}
+.video-card h3 {
+    font-size: 15px;
+    margin: 9px 0 5px;
+}
+.video-card p {
+    color: #777;
+    font-size: 12px;
+    margin: 5px 0 12px;
+}
+footer {
+    background: #171717;
+    color: white;
+    padding: 22px;
+    text-align: center;
+    margin-top: 30px;
+}
+@media(min-width:700px) {
+    .video-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
 }
 </style>
 </head>
-
 <body>
-
-<header>My Video Website</header>
-
-<h2 id="title">Video Title 2</h2>
-
-<div class="player">
-<video controls playsinline preload="metadata">
-    <source
-    src="-2428178015761973789.mp4"
-    type="video/mp4">
-</video>
+<header>
+    <span class="logo">My</span> Video Website
+</header>
+<div class="container">
+    <div class="video-details">
+        <h2 id="videoTitle">Loading...</h2>
+        <div class="info" id="videoInfo"></div>
+    </div>
+    <div class="player">
+        <video id="mainVideo"
+        controls
+        playsinline
+        preload="metadata">
+        </video>
+    </div>
+    <h2 class="section-title">
+        More Videos You May Like
+    </h2>
+    <div class="video-grid" id="videoGrid"></div>
 </div>
-
+<footer>
+    MY VIDEO WEBSITE © 2026
+</footer>
+<script>
+// VIDEO DATABASE
+const videos = [
+{title:"Video Title 1", views:"12.5K", file:""},
+{title:"Video Title 2", views:"25.8K", file:"-2428178015761973789.mp4"},
+{title:"Video Title 3", views:"18.3K", file:""},
+{title:"Video Title 4", views:"32.4K", file:""},
+{title:"Video Title 5", views:"15.6K", file:""},
+{title:"Video Title 6", views:"42.1K", file:""},
+{title:"Video Title 7", views:"21.7K", file:""},
+{title:"Video Title 8", views:"19.2K", file:""},
+{title:"Video Title 9", views:"55.3K", file:""},
+{title:"Video Title 10", views:"28.6K", file:""},
+{title:"Video Title 11", views:"13.4K", file:""},
+{title:"Video Title 12", views:"38.9K", file:""},
+{title:"Video Title 13", views:"17.5K", file:""},
+{title:"Video Title 14", views:"44.2K", file:""},
+{title:"Video Title 15", views:"29.8K", file:""},
+{title:"Video Title 16", views:"61.2K", file:""},
+{title:"Video Title 17", views:"23.6K", file:""},
+{title:"Video Title 18", views:"36.7K", file:""},
+{title:"Video Title 19", views:"48.5K", file:""},
+{title:"Video Title 20", views:"72.4K", file:""}
+];
+// URL থেকে ভিডিও নম্বর নেওয়া
+const params = new URLSearchParams(window.location.search);
+let videoNumber = parseInt(params.get("id")) || 2;
+if(videoNumber < 1 || videoNumber > videos.length) {
+    videoNumber = 2;
+}
+const currentVideo = videos[videoNumber - 1];
+// ভিডিও চালানো
+document.getElementById("videoTitle").innerText =
+currentVideo.title;
+document.getElementById("videoInfo").innerText =
+"👤 Admin | " + currentVideo.views + " views";
+const player = document.getElementById("mainVideo");
+if(currentVideo.file) {
+    const source = document.createElement("source");
+    source.src = currentVideo.file;
+    source.type = "video/mp4";
+    player.appendChild(source);
+    player.load();
+} else {
+    player.style.display = "none";
+    const message = document.createElement("p");
+    message.innerText =
+    "এই ভিডিওটি এখনো আপলোড করা হয়নি।";
+    message.style.padding = "25px";
+    message.style.color = "#777";
+    message.style.background = "#eee";
+    player.parentElement.appendChild(message);
+}
+// নিচে ২০টি ভিডিও দেখানো
+const grid = document.getElementById("videoGrid");
+videos.forEach((video, index) => {
+    if(index === videoNumber - 1) return;
+    const card = document.createElement("div");
+    card.className = "video-card";
+    card.innerHTML = `
+        <div class="thumbnail">
+            <img
+            src="images/IMG_6694.jpeg"
+            alt="${video.title}"
+            loading="lazy">
+            <span class="play-icon">▶</span>
+        </div>
+        <h3>${video.title}</h3>
+        <p>👤 Admin | ${video.views} views</p>
+    `;
+    card.addEventListener("click", function() {
+        window.location.href =
+        "watch.html?id=" + (index + 1);
+    });
+    grid.appendChild(card);
+});
+</script>
 </body>
 </html>
